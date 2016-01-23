@@ -6,6 +6,7 @@
 	<style>
 	body { margin:0; padding:0;}
 	h3, p {display: inline; font-family: Roboto Mono; color: #fff;}
+	h3 {font-weight: 400;}
 	#map {position: absolute;top: 0;bottom: 0;right: 0;margin:auto;width: 100%;}
 	.bodytext {
 		background-color: rgba(44,44,44,0.7);
@@ -14,12 +15,15 @@
 		top: 3em;
 		left: 3em;
 		font-family: Roboto Mono;
+		font-weight: 300;
 		width: 30vw;
 		height: 100%;
 		padding: 2vw;
 	}
     </style>
-    <link href='https://fonts.googleapis.com/css?family=Roboto+Mono:400,700,400italic' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Roboto+Mono:300, 400,700,400italic' rel='stylesheet' type='text/css'>
+    <!-- dependencies: d3.js, Mapbox GL -->
+    <script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
     <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.12.4/mapbox-gl.js'></script>
     <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.12.4/mapbox-gl.css' rel='stylesheet' />
 </head>
@@ -39,16 +43,31 @@
   		hash: true,
     	minZoom: 3
 	});
+	//parse the csv data of police killings (https://github.com/fivethirtyeight/data/tree/master/police-killings)
+	var dataset = d3.csv('/data/police_killings.csv', function(d) {
+	  return {
+	    name: d.name,
+	    age: +d.age,
+	    gender: d.gender,
+	    city: d.city,
+	    state: d.state,
+	    raceethnicity: d.raceethnicity
+	  };
+	}, function(err, rows) {
+	  //do nothing
+	});
 	
 	
 </script>
 	<div class="bodytext">
 		<h3>Mapping Police Killings</h3><br><br>
 		<!-- scaffolding for dynamic text injection -->
-		On <h3 class="date">date</h3>, <h3 class="name">name</h3> was killed in <h3 class="city">city</h3>, <h3 class="state">state</h3>. <p class="gender">he/she</p> was <h3 class="age">age</h3>.
+		On <h3 class="month">month</h3> <h3 class="day">day</h3>, <h3 class="name">name</h3> was killed in <h3 class="city">city</h3>, <h3 class="state">state</h3>. <p class="gender">he/she</p> was <h3 class="age">age</h3>.
 		<br><br>
 		<p>In 2015, <h3>1139</h3> people were killed by the police in the United States. <h3>578</h3> were white, <h3>302</h3> were black, and <h3>194</h3> were Hispanic/Latino.</p>
 	</div>
-
+	<div class="footer">
+		
+	</div>
 </body>
 </html>
