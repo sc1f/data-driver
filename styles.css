@@ -3,6 +3,9 @@ body {
 	padding:0; 
 	background-color: rgb(44,44,44);
 }
+a, a:visited, a:hover, a:focus, a:hover, a:active {
+	color: #ffffff
+}
 h3, p {
 	display: inline; 
 	font-family: Roboto Mono; 
