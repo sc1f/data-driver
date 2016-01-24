@@ -4,7 +4,8 @@
 	<meta charset="UTF-8">
 	<title>Mapping Police Killings</title>
     <link href='https://fonts.googleapis.com/css?family=Roboto+Mono:300, 400,700,400italic' rel='stylesheet' type='text/css'>
-    <!-- dependencies: d3.js, Mapbox GL -->
+    <!-- dependencies: JQuery, d3.js, Mapbox GL, Web GL -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
     <script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
     <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.12.4/mapbox-gl.js'></script>
     <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.12.4/mapbox-gl.css' rel='stylesheet' />
@@ -26,18 +27,102 @@
   		hash: true,
     	minZoom: 3
 	});
+
+	//parse the csv data of police killings and apply it to the DOM(https://github.com/fivethirtyeight/data/tree/master/police-killings)
+	//global var for lat lon
+	var coord = {};
+	//d3 stuff
+	var dataset = d3.csv('/data/police_killings.csv', function(d) {
+  	  return {
+      //throws out parsed csv values as an array of objects
+      name: d.name,
+      age: +d.age,
+      month: d.month,
+      day: d.day,
+      gender: d.gender,
+      city: d.city,
+      state: d.state,
+      raceethnicity: d.raceethnicity,
+      longitude: +d.longitude,
+      latitude: +d.latitude
+    };
+  	}, function (data) {
+    //make a random number from 1-468 for our DOM application
+      function getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      } 
+      //throws that number into a variable for the for loop
+      (function (){
+        var callback = function(){
+          var i = getRandomInt(1,468);
+          //accesses array values and throws into DOM
+          $('.month').text(data[i].month);
+          $('.day').text(data[i].day);
+          $('.name').text(data[i].name);
+          $('.city').text(data[i].city);
+          $('.state').text(data[i].state);
+          $('.age').text(data[i].age);
+          //grabs lat/lon from csv data
+          coord.lat = data[i].latitude;
+          coord.lon = data[i].longitude;
+          return coord.lat;
+          return coord.lon;
+          return i;
+          //loads the marker data
+          map.on('style.load', function () {
+    		map.addSource("markers", {
+        	"type": "geojson",
+        		"data": {
+           		"type": "FeatureCollection",
+            		"features": [{
+                		"type": "Feature",
+                		"geometry": {
+                    		"type": "Point",
+                    		"coordinates": [coord.lon, coord.lat]
+                	},
+                	"properties": {
+                    	"name": data[i].name,
+                    	"age": data[i].age,
+                    	"raceethnicity": data[i].raceethnicity,
+                    	"city": data[i].city,
+                    	"state": data[i].state,
+                    	"marker-symbol": "marker"
+                			}			
+           				}]
+        			}
+    			});
+    		//adds the data to DOM
+    		map.addLayer({
+        		"id": "deaths_" + i,
+        		"type": "symbol",
+        		"source": "markers",
+        		"layout": {
+            		"icon-image": "marker-12",
+        			}
+    			});
+			});
+        };
+        callback();
+        //runs the whole smorgasbord every 3 seconds
+        window.setInterval(callback, 3000);
+      }());
+    //debug use
+    return(data);
+	});
 	</script>
 	<div class="bodytext">
 		<h3>Mapping Police Killings</h3><br><br>
 		<!-- scaffolding for dynamic text injection -->
-		On <h3 class="month">month</h3> <h3 class="day">day</h3>, <h3 class="name">name</h3> was killed in <h3 class="city">city</h3>, <h3 class="state">state</h3> at the age of <h3 class="age">age</h3>.
+		On <h3 class="month"></h3> <h3 class="day"></h3>, <h3 class="name"></h3> was killed in <h3 class="city"></h3>, <h3 class="state"></h3> at the age of <h3 class="age"></h3>.
 		<br><br>
+	</div>
+	<div class="bodytext info">
 		<p>In 2015, <h3>1139</h3> people were killed by the police in the United States. <h3>578</h3> were white, <h3>302</h3> were black, and <h3>194</h3> were Hispanic/Latino.</p>
 		<br><br>
 		<p>The youngest person killed was 6 years old. The oldest person killed was 87.</p>
 	</div>
 	<div class="footer">
-		
+		A project by <a href="http://sc1f.github.io">Jun Tan</a> | Data from <a href="https://github.com/fivethirtyeight/data/tree/master/police-killings">FiveThirtyEight</a> | Inspired by <a href="http://www.theguardian.com/us-news/ng-interactive/2015/jun/01/the-counted-police-killings-us-database">The Guardian</a> | <a href="https://github.com/sc1f/data-driver">GitHub</a>.
 	</div>
 </body>
 </html>
