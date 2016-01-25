@@ -1,3 +1,4 @@
+/* resets */
 body { 
 	margin:0; 
 	padding:0; 
@@ -14,6 +15,7 @@ h3, p {
 h3 {
 	font-weight: 400;
 }
+/* body content */
 #map {
 	position: absolute;
 	top: 0;
@@ -61,19 +63,58 @@ h3 {
 .footer > a:visited, a:hover, a:focus, a:hover, a:active {
 	color: #fff;
 }
+/* responsive */
 @media screen and (max-width: 540px) {
 	.bodytext {
 		font-size: 1em;
-		top: 1em;
-		left: 1em;
+		top: 0;
+		left: 0;
+		width: 98%;
+		height: 9em;
+		text-align: center;
 	}
 	.info {
-		height: 49vw;
-		top: 128vw;
+		left: 0;
+		height: 10em;
+		width: 94%;
+		text-align: center;
+		top: 85%;
 		font-size: .6em;
+		padding: 1em;
 	}
 	.footer {
 		line-height: 5vw;
 		height: 10vw;
+	}
+}
+@media screen and (max-width: 320px) and (max-device-width : 480px) {
+	.footer {
+		height: 17vw;
+	}
+	.info {
+		top: 74%;
+	}
+}
+@media only screen and (min-device-width: 320px) and (max-device-height: 568px) and (orientation : landscape) and (-webkit-device-pixel-ratio: 2){
+	.bodytext {
+		font-size: 1em;
+		top: 0;
+		left: 0;
+		width: 97%;
+		height: 6em;
+		text-align: center;
+	}
+	.info {
+		left: 0;
+		height: 10em;
+		width: 96%;
+		text-align: center;
+		top: 85%;
+		font-size: .6em;
+		padding: 1em;
+	}
+	.footer {
+		line-height: 5vw;
+		height: 5vw;
 	}
 }
